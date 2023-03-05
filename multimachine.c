@@ -14,6 +14,9 @@
 /* Allow absolute addresses? */
 #define ABSFLG 0
 
+/* Decode opcodes? */
+#define OPCODES 0
+
 /* Instructions for simulated machine consist of four words: 
  * 0. An opcode,
  * 1. Source operand 1,
@@ -92,7 +95,24 @@ void run_instruction( unsigned char *membuf, unsigned length, unsigned char *ent
   }
 
   /* Decode operation and execute */
+  #if OPCODES
+  switch( opcode & 0x03 ){
+  case 0x00:
+    dest = 0xff-op1;
+    break;
+  case 0x01:
+    dest = op1&op2;
+    break;
+  case 0x02:
+    dest = op1+op2;
+    break;
+  case 0x03:
+    dest = (op1-op2 > 0)? op1-op2: 0;
+    break;
+  }
+  #else
   dest = (op1-op2 > 0)? op1-op2: 0;
+  #endif
 
   /* Deposit destination */
   if( ABSFLG && (opcode & 0x20) ){ /* Absolute destination */
