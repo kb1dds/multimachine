@@ -145,7 +145,7 @@ void print_membuf( unsigned char *membuf, unsigned length ){
 int main( int argc, char *argv[] ){
   unsigned char membuf[MEMSIZ];
   unsigned char *address;
-  unsigned i;
+  unsigned i, nnz;
 
   /* Clear memory */
   for( i = 0; i < MEMSIZ; i ++ )
@@ -153,6 +153,10 @@ int main( int argc, char *argv[] ){
 
   while(1) {
     print_membuf(membuf, MEMSIZ);
+    for( nnz = 0, i = 0; i < MEMSIZ; i ++ )
+      if(membuf[i]) nnz++;
+    printf("nnz = %u\n",nnz);
+    
     address=membuf+random();
     run_instruction( membuf, MEMSIZ, address );
   }
