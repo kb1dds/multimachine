@@ -11,6 +11,9 @@
 /* Size of simulated memory in bytes */
 #define MEMSIZ 1024
 
+/* Allow absolute addresses? */
+#define ABSFLG 0
+
 /* Instructions for simulated machine consist of four words: 
  * 0. An opcode,
  * 1. Source operand 1,
@@ -65,7 +68,7 @@ void run_instruction( unsigned char *membuf, unsigned length, unsigned char *ent
   opcode=buffer_access(membuf,length,entrypt);
 
   /* Load first operand */
-  if( opcode & 0x80 ){ /* Absolute source */
+  if( ABSFLG && (opcode & 0x80) ){ /* Absolute source */
     stored_address=buffer_access(membuf,length,entrypt+1);
     address=membuf + stored_address;
     op1=buffer_access(membuf,length,address);
@@ -77,7 +80,7 @@ void run_instruction( unsigned char *membuf, unsigned length, unsigned char *ent
   }
 
   /* Load second operand */
-  if( opcode & 0x40 ){ /* Absolute source */
+  if( ABSFLG && (opcode & 0x40) ){ /* Absolute source */
     stored_address=buffer_access(membuf,length,entrypt+2);
     address=membuf + stored_address;
     op2=buffer_access(membuf,length,address);
@@ -92,7 +95,7 @@ void run_instruction( unsigned char *membuf, unsigned length, unsigned char *ent
   dest = (op1-op2 > 0)? op1-op2: 0;
 
   /* Deposit destination */
-  if( opcode & 0x20 ){ /* Absolute destination */
+  if( ABSFLG && (opcode & 0x20) ){ /* Absolute destination */
     stored_address=buffer_access(membuf,length,entrypt+3);
     address=membuf + stored_address;
     address=buffer_address(membuf,length,address);
