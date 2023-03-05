@@ -12,7 +12,7 @@
 #define MEMSIZ 1024
 
 /* Allow absolute addresses? */
-#define ABSFLG 0
+#define ABSFLG 1
 
 /* Decode opcodes? */
 #define OPCODES 0
