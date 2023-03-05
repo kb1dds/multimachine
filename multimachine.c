@@ -89,7 +89,7 @@ void run_instruction( unsigned char *membuf, unsigned length, unsigned char *ent
   }
 
   /* Decode operation and execute */
-  dest = op1+op2;
+  dest = (op1-op2 > 0)? op1-op2: 0;
 
   /* Deposit destination */
   if( opcode & 0x20 ){ /* Absolute destination */
@@ -109,7 +109,11 @@ void print_membuf( unsigned char *membuf, unsigned length ){
   unsigned i;
 
   for( i = 0; i < length; i++ ){
-    printf( "%02x ", membuf[i] );
+    if( membuf[i] )
+      printf( "%02x ", membuf[i] );
+    else
+      printf( "   " );
+    
     if( !((i+1) % 32) ) printf("\n");
   }
   printf("\n");
@@ -122,7 +126,7 @@ int main( int argc, char *argv[] ){
 
   /* Clear memory */
   for( i = 0; i < MEMSIZ; i ++ )
-    membuf[i]=(unsigned char) random();
+    membuf[i]= (unsigned char) random();
 
   while(1) {
     print_membuf(membuf, MEMSIZ);
